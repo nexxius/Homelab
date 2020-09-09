@@ -50,7 +50,7 @@ Take a look at the following projects for some easy ideas to get started with a 
     - Networking and routing
     - Firewall administration
     - Security
-- Set up a Synology Device (or other NAS, including custom-built ones) to host, store, and manage your files and media.
+- [Set up a Synology Device (or other NAS, including custom-built ones) to host, store, and manage your files and media](Self-Hosted_NAS.md).
   - Infrastructure needs you can address:
     - Network Infrastructure: Synology makes certain packages available to install, including a VPN solution.
     - Media and file hosting: Host your files for your other systems.
