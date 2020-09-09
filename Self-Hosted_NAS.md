@@ -21,7 +21,7 @@ There are a few main advantages to running and using docker for your services:
 - **Use Software Not Packaged for your System:** There are a wide variety of Docker containers available to install. Synology only provides a limited number of packages, so Docker provides you with a huge amount of freedom.
 - **Easily Defined Ports:** If you're looking to run multiple services with a web interface, you may run into the problem of conflicting ports. Normally you can configure things, but this might be tricky, difficult, or a pain. With docker, you can configure which of the host's ports are used for each container (and change them easily later).
 - **Quick Deployment:** Many of these services are basically a 'one command and running' solution. There isn't any fiddling with dependencies or getting any packages to talk to each other.
-- **Portability:** If you keep your containers' data stored in a persistent folder on your host system, the  
+- **Portability:** If you keep your containers' data stored in a persistent folder on your host system, the files can be easily copied onto a new system.
 - **Somewhat Increased Security:** I mention this one last since there are arguments that could be made both ways. On the one hand, if someone compromises a container, the compromise will generally be limited to that one container. This is obviously not going to be helpful if your container has significant privileges
 
 ### Setting Up Docker
@@ -50,7 +50,7 @@ The following containers will get you started on Docker. Most of these docker co
 #### Portainer
 [Portainer](https://www.portainer.io/) allows you to manage your docker containers via a nice web interface. Portainer provides some fine-grained control over your containers.
 ```
-  docker run --name=portainer -d -p 9000:9000 -v /var/run/docker.sock:/var/run/docker.sock -v /volume1/docker/portainer:/data --restart always portainer/portainer
+docker run --name=portainer -d -p 9000:9000 -v /var/run/docker.sock:/var/run/docker.sock -v /volume1/docker/portainer:/data --restart always portainer/portainer
 ```
 After running the above command, you can find the new portainer interface active at `http://hostname:9000/`. You can now use Portainer (or the default Docker manager in on your NAS) to manage your containers.
 
@@ -59,14 +59,14 @@ After running the above command, you can find the new portainer interface active
 
 You can customize when Watchtower runs, which is important because it may create some downtime for your docker services. The below command has Watchtower update the containers (including stopped containers) at 6:00 AM every morning (presumably when no one is using the containers). Refer to the [Watchtower Documentation](https://containrrr.dev/watchtower/) for customization options.
 ```
-    docker run -d --name watchtower -v /var/run/docker.sock:/var/run/docker.sock -e TZ=Europe/London -e WATCHTOWER_CLEANUP=true -e WATCHTOWER_SCHEDULE="0 0 6 * * *" -e WATCHTOWER_INCLUDE_STOPPED=true --restart unless-stopped containrrr/watchtower
+docker run -d --name watchtower -v /var/run/docker.sock:/var/run/docker.sock -e TZ=Europe/London -e WATCHTOWER_CLEANUP=true -e WATCHTOWER_SCHEDULE="0 0 6 * * *" -e WATCHTOWER_INCLUDE_STOPPED=true --restart unless-stopped containrrr/watchtower
 ```
 
 #### Calibre-Web
 [Calibre-Web](https://docs.linuxserver.io/images/docker-calibre-web) provides you with a nice way to host your calibre database on your home network.
 
 ```
-    docker create --name=calibre-web -e PUID=[UID] -e PGID=[GID] -e TZ=Europe/London -e DOCKER_MODS=linuxserver/calibre-web:calibre -p 9002:8083 -v /volume1/docker/calibre-web:/config -v /volume1/Files/Books:/books --restart unless-stopped linuxserver/calibre-web
+docker create --name=calibre-web -e PUID=[UID] -e PGID=[GID] -e TZ=Europe/London -e DOCKER_MODS=linuxserver/calibre-web:calibre -p 9002:8083 -v /volume1/docker/calibre-web:/config -v /volume1/Files/Books:/books --restart unless-stopped linuxserver/calibre-web
 ```
     
 Once the container is running, the calibre-web interface will be available at http://host:9002. You will need to point it to an existing Calibre database in order for it to host your books.
@@ -75,7 +75,7 @@ Once the container is running, the calibre-web interface will be available at ht
 [Ubooquity](https://docs.linuxserver.io/images/docker-ubooquity) provides an interface to host and read your comics online. It can also host books, but I find that it struggles with a large books database. As a result, I use Ubooquity only for comics.
 
 ```
-    docker create --name=ubooquity -e PGID=[UID] -e PGID=[GID] -e TZ=Europe/London -p 2202:2202 -p 2203:2203 -v /volume1/docker/ubooquity:/config -v /volume1/Files/Books:/books -v /volume1/Files/Comics:/comics --restart unless-stopped linuxserver/ubooquity
+docker create --name=ubooquity -e PGID=[UID] -e PGID=[GID] -e TZ=Europe/London -p 2202:2202 -p 2203:2203 -v /volume1/docker/ubooquity:/config -v /volume1/Files/Books:/books -v /volume1/Files/Comics:/comics --restart unless-stopped linuxserver/ubooquity
 ```
     
 Once the container is running, The Ubooquity admin interface will be available at http://host:2203/ubooquity/admin/. The user interface is available at http://host:2202/ubooquity.
@@ -87,7 +87,7 @@ I use my Synology NAS to manage my dotfiles on my home network. I do this primar
 - Install the Syncthing docker container (after creating a `syncthing` folder in the `docker` Shared Folder):
 
 ```
-    docker create --name=syncthing -e PUID=[PID] -e PGID=[FID] -e TZ=Europe/London -e UMASK_SET=022 -p 8384:8384 -p 22000:22000 -p 21027:21027/udp -v /volume1/docker/syncthing:/config -v [Path to your dotfiles in the cloud]:/Dotfiles -v [Path to any additional folders you want to share]:/data1 -v [Path to any additional folders you want to share]:/data2  --restart unless-stopped linuxserver/syncthing
+docker create --name=syncthing -e PUID=[PID] -e PGID=[FID] -e TZ=Europe/London -e UMASK_SET=022 -p 8384:8384 -p 22000:22000 -p 21027:21027/udp -v /volume1/docker/syncthing:/config -v [Path to your dotfiles in the cloud]:/Dotfiles -v [Path to any additional folders you want to share]:/data1 -v [Path to any additional folders you want to share]:/data2  --restart unless-stopped linuxserver/syncthing
 ```
     
 - Install Syncthing on all clients that you would like to sync your dotfiles to. On Linux, I generally use a docker container similar to the above. On Windows, I have had success with [SyncTrayzor](https://github.com/canton7/SyncTrayzor).
