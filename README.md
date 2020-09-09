@@ -33,7 +33,7 @@ In this section, I will set out some basic Homelab philosophies that can help to
 
 ## Getting Started with Your Homelab
 Take a look at the following projects for some easy ideas to get started with a Homelab.
-- Build a Raspberry Pi 4 server as a Homelab starting point.
+- [Build a Raspberry Pi 4 server as a Homelab starting point](RaspberryPi4_Server.md).
   - Infrastructure needs you can address:
     - Network Infrastructure: Run a VPN server and a DNS-level ad-blocker.
     - Media and File Hosting: Host files on your Pi for the rest of the network to use.
